@@ -1,0 +1,40 @@
+### This is a sample Vagrant file, please modify it to suit your configurations
+
+Vagrant.configure("2") do |configuration|
+
+  configuration.vm.define "ansible" do |config|
+    config.vm.box = "centos/7"
+    config.vm.hostname = "ansible.local"
+    config.vm.network "private_network", ip: "192.168.33.50"
+  end
+
+  configuration.vm.define "develop" do |config|
+    config.vm.box = "ubuntu/xenial64"
+    config.vm.hostname = "develop.local"
+    config.vm.network "private_network", ip: "192.168.33.100"
+  end
+
+
+  configuration.vm.define "jenkins" do |config|
+    config.vm.box = "centos/7"
+    config.vm.hostname = "jenkins.local"
+    config.vm.network "private_network", ip: "192.168.33.10"
+    #config.vm.network "forwarded_port", guest: 8080, host: 8080
+    config.vm.provider "virtualbox" do |vb|
+      vb.memory = "4096"
+      vb.cpus = "2"
+    end
+  end
+
+  configuration.vm.define "tomcat_server" do |config|
+    config.vm.box = "ubuntu/xenial64"
+    config.vm.hostname = "tomcat.local"
+    config.vm.network "private_network", ip: "192.168.33.20"
+    #config.vm.network "forwarded_port", guest: 8080, host: 8090
+    config.vm.provider "virtualbox" do |vb|
+      vb.memory = "4096"
+       vb.cpus = "2"
+     end
+   end
+
+end
