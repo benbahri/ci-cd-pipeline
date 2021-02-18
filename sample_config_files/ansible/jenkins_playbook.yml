@@ -1,0 +1,45 @@
+---
+
+- name: install jenkins on Jenkins Servers
+  hosts: jenkins
+  become: true
+  tasks:
+  - name: install java
+    yum:
+      name: java-1.8.0-openjdk
+      state: present
+
+  - name: create Jenkins repo
+    yum_repository:
+      name: jenkins
+      description: Jenkins Official Repo for Centos 7
+      baseurl: http://pkg.jenkins.io/redhat
+      gpgkey: https://jenkins-ci.org/redhat/jenkins-ci.org.key
+      gpgcheck: no
+      enabled: yes
+      state: present
+
+  - name: install jenkins
+    yum:
+      update_cache: yes
+      name: jenkins
+      state: present
+
+  - name: start jenkins server
+    service:
+      name: jenkins
+      state: started
+      enabled: yes
+      
+  - name: wait 10 seconds until jenkins starts
+    wait_for:
+      timeout: 10
+
+  - name: cat jenkins default key into regisered variable
+    shell: cat /var/lib/jenkins/secrets/initialAdminPassword
+    changed_when: false
+    register: jenkinspassword
+
+  - name: show initial jenkins password
+    debug:
+      var: jenkinspassword.stdout

@@ -1,0 +1,48 @@
+### This is a sample Vagrant file, please modify it to suit your configurations
+$script_inject_pk =<<-'SCRIPT'
+cat /vagrant/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys
+SCRIPT
+
+Vagrant.configure("2") do |configuration|
+
+  configuration.vm.define "ansible" do |config|
+    config.vm.box = "centos/7"
+    config.vm.hostname = "ansible.local"
+    config.vm.network "private_network", ip: "192.168.33.50"
+    #before activating the next line, please make sure that you have the id_rsa file is in position
+    #subconfig.vm.provision "file", source: "./id_rsa", destination: "/home/vagrant/.ssh/"
+  end
+
+  configuration.vm.define "develop" do |config|
+    config.vm.box = "ubuntu/xenial64"
+    config.vm.hostname = "develop.local"
+    config.vm.network "private_network", ip: "192.168.33.100"
+    #The next line copies the value of id_rsa.pub into .ssh/authorised_keys using the script declared ignore_above
+    #before activating the next line, please make sure that you have the id_rsa.pub file is in position
+    #subconfig.vm.provision "shell", inline: $script_inject_pk
+  end
+
+
+  configuration.vm.define "jenkins" do |config|
+    config.vm.box = "centos/7"
+    config.vm.hostname = "jenkins.local"
+    config.vm.network "private_network", ip: "192.168.33.10"
+    #config.vm.network "forwarded_port", guest: 8080, host: 8080
+    config.vm.provider "virtualbox" do |vb|
+      vb.memory = "4096"
+      vb.cpus = "2"
+    end
+  end
+
+  configuration.vm.define "tomcat_server" do |config|
+    config.vm.box = "ubuntu/xenial64"
+    config.vm.hostname = "tomcat.local"
+    config.vm.network "private_network", ip: "192.168.33.20"
+    #config.vm.network "forwarded_port", guest: 8080, host: 8090
+    config.vm.provider "virtualbox" do |vb|
+      vb.memory = "4096"
+       vb.cpus = "2"
+     end
+   end
+
+end

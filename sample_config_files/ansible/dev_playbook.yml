@@ -1,0 +1,14 @@
+---
+- name: Provision developpers machines
+  become: true
+  hosts: dev
+  tasks:
+  - name: install necessary packages
+    apt:
+      update_cache: yes
+      name: "{{ item }}"
+    loop:
+    - git
+    - nano
+    - openjdk-8-jdk
+    - maven
