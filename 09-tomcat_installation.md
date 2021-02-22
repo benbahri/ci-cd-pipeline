@@ -21,7 +21,6 @@
    ```sh
    ln -s /opt/apache-tomcat-8.5.63/bin/startup.sh /usr/local/bin/tomcatup
    ln -s /opt/apache-tomcat-8.5.63/bin/shutdown.sh /usr/local/bin/tomcatdown
-   s
    ```
   #### Check point :
 access tomcat application from browser on prot 8080  
