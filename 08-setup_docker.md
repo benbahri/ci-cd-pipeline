@@ -52,13 +52,13 @@ The configuration would be used by the plugin which Docker Image to use the agen
 ### Configure Docker agent
 1. On the Jenkins Dashboard, select Manage Jenkins.
 1. Select Configure System to access the main Jenkins settings.
-1. Click on the link `he cloud configuration has moved to a separate configuration page.`
+1. Click on the link `the cloud configuration has moved to a separate configuration page.`
 1. Select Docker from the dropdown called Add a new cloud.
 1. Click on `Docker cloud details`
 1. Add the URI as default value `unix:///var/run/docker.sock`
 1. Test connection and save
 
-In some cases you need to add the `jenkins`user to the `docker` group to get the permission to run docker from jenkins. You may need to logout and relogin to jenkins
+In some cases you need to add the `jenkins` user to the `docker` group to get the permission to run docker from jenkins. You may need to logout and relogin to jenkins
 to do so, on your shell execute:
 ```
 sudo usermodd -a -G docker jenkins

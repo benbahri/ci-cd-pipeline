@@ -1,80 +1,80 @@
-# Installer Jenkins sur CentOS / 7
-Jenkins est un programme indépendant basé sur Java, prêt à être exécuté, avec des packages pour Windows, Mac OS X et d'autres systèmes d'exploitation de type Unix.
-En tant que serveur d'automatisation extensible, Jenkins peut être utilisé comme un simple serveur CI ou transformé en hub de livraison continue pour n'importe quel projet.
+# Install Jenkins on CentOS/7
+Jenkins is a self-contained Java-based program, ready to run out-of-the-box, with packages for Windows, Mac OS X and other Unix-like operating systems. As an extensible automation server, Jenkins can be used as a simple CI server or turned into the continuous delivery hub for any project.
 
 
-### Conditions préalables
+### Prerequisites
 1. VM CentOS/7
-   - Avec accès Internet
-   - Port «8080» ouvert à Internet
+   - With Internet Access
+   - Port `8080` open for internet
 1. Java v1.8.x
 
-## Installer Java
-1. Nous utiliserons open java pour notre démo, obtenez la dernière version sur http://openjdk.java.net/install/
-```sh
-yum install java-1.8*
-#yum -y install java-1.8.0-openjdk
-```
+## Install Java
+1. We will be using open java for our demo, Get the latest version from http://openjdk.java.net/install/
+   ```sh
+   yum install java-1.8*
+   #yum -y install java-1.8.0-openjdk
+   ```
 
-1. Confirmez la version Java et définissez  JAVA_HOME
-```sh
-java -version
-find /usr/lib/jvm/java-1.8* | head -n 3
+1. Confirm Java Version and set the java home
+   ```sh
+   java -version
+   find /usr/lib/jvm/java-1.8* | head -n 3
 
-JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.212.b04-1.el8_0.x86_64
-export JAVA_HOME
-PATH=$PATH:$JAVA_HOME
- # To set it permanently update your .bash_profile
-vi ~/.bash_profile
-```
-*La sortie devrait être quelque chose comme ça,*
-```sh
-[root@~]# java -version
-openjdk version "1.8.0_151"
-OpenJDK Runtime Environment (build 1.8.0_151-b12)
-OpenJDK 64-Bit Server VM (build 25.151-b12, mixed mode)
-```
+   JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.212.b04-1.el8_0.x86_64
+   export JAVA_HOME
+   PATH=$PATH:$JAVA_HOME
+    # To set it permanently update your .bash_profile
+   vi ~/.bash_profile
+   ```
+   _The output should be something like this,_
+    ```sh
+   [root@~]# java -version
+   openjdk version "1.8.0_151"
+   OpenJDK Runtime Environment (build 1.8.0_151-b12)
+   OpenJDK 64-Bit Server VM (build 25.151-b12, mixed mode)
+   ```
 
-## Installer Jenkins
-Vous pouvez installer jenkins en utilisant le rpm ou en configurant le dépôt. Nous allons mettre en place le dépôt afin de pouvoir le mettre à jour facilement à l'avenir.
-1. Obtenez la dernière version de jenkins sur https://pkg.jenkins.io/redhat-stable/ et l'installez
-```sh
-yum -y install wget
-sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
-sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
-yum -y install jenkins
-```
-### Démarrer Jenkins
-```sh
-# Start jenkins service
-systemctl start jenkins
+## Install Jenkins
+ You can install jenkins using the rpm or by setting up the repo. We will set up the repo so that we can update it easily in the future.
+1. Get the latest version of jenkins from https://pkg.jenkins.io/redhat-stable/ and install
+   ```sh
+   yum -y install wget
+   sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+   sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+   yum -y install jenkins
+   ```
 
-# Setup Jenkins to start at boot,
-systemctl enablejenkins
-```
+   ### Start Jenkins
+   ```sh
+   # Start jenkins service
+   systemctl start jenkins
 
-### Accéder à Jenkins
-Par défaut, jenkins fonctionne sur le port `8080`, vous pouvez accéder à jenkins par
-```sh
-http://YOUR-SERVER-IP:8080
-```  
-#### Configurer Jenkins
-- Le nom d'utilisateur par défaut est `admin`
-- Prenez le mot de passe par défaut
-- Emplacement du mot de passe: `/var/lib/jenkins/secrets/initialAdminPassword`
-- Installation du plugin `Skip`; _Nous pouvons le faire plus tard_
-- Changer le mot de passe administrateur
-   - `Admin`>` Configurer`> `Mot de passe`
-- Configurer le `java` path
-  - `Manage Jenkins`>` Global Tool Configuration`> `JDK`
-- Créez un autre identifiant d'utilisateur administrateur
+   # Setup Jenkins to start at boot,
+   systemctl enablejenkins
+   ```
 
-### Tester les jobs Jenkins
-1. Créer un «new item»
-1. Entrez un nom d'élément - `My-First-Project`
-   - Choisissez le projet `Freestyle`
-1. Sous la section Build
-   Execute shell: echo "Welcome to Jenkins Demo"
-1. Sauvegardez votre travail
+   ### Accessing Jenkins
+   By default jenkins runs at port `8080`, You can access jenkins at
+   ```sh
+   http://YOUR-SERVER-IP:8080
+   ```
+  #### Configure Jenkins
+- The default Username is `admin`
+- Grab the default password
+- Password Location:`/var/lib/jenkins/secrets/initialAdminPassword`
+- `Skip` Plugin Installation; _We can do it later_
+- Change admin password
+   - `Admin` > `Configure` > `Password`
+- Configure `java` path
+  - `Manage Jenkins` > `Global Tool Configuration` > `JDK`  
+- Create another admin user id
+
+### Test Jenkins Jobs
+1. Create “new item”
+1. Enter an item name – `My-First-Project`
+   - Chose `Freestyle` project
+1. Under the Build section
+	Execute shell: echo "Welcome to Jenkins Demo"
+1. Save your job
 1. Build job
-1. Vérifiez la "console output"
+1. Check "console output"

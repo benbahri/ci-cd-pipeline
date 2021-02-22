@@ -4,6 +4,9 @@
   hosts: jenkins
   become: true
   tasks:
+  - name: create
+    group:
+      name: sonar
   - name: create user sonar to manage the sonar service
     user:
       name: sonar

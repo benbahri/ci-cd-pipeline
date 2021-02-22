@@ -1,0 +1,19 @@
+---
+# tasks file for artifactory
+- name: download artifcatory repo file
+  get_url:
+    url: https://releases.jfrog.io/artifactory/artifactory-rpms/artifactory-rpms.repo
+    dest: /etc/yum.repos.d/jfrog-artifactory-rpms.repo
+
+
+- name: install artifactory with packager manager
+  yum:
+    update_cache: yes
+    name: jfrog-artifactory-oss
+    state: present
+
+- name: start service
+  service:
+    name: artifactory
+    state: started
+    enabled: yes
