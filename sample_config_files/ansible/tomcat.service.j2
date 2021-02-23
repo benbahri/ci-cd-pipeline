@@ -1,0 +1,16 @@
+[Unit]
+Description = Apache Tomcat 8
+After = syslog.target network.target
+
+[Service]
+User = tomcat
+Group = tomcat
+Type = oneshot
+PIDFile =/opt/apache-tomcat-8.5.63/tomcat.pid
+RemainAfterExit = yes
+ExecStart =/opt/apache-tomcat-8.5.63/bin/startup.sh
+ExecStop =/opt/apache-tomcat-8.5.63/bin/shutdown.sh
+ExecReStart =/opt/apache-tomcat-8.5.63/bin/shutdown.sh;/opt/apache-tomcat-8.5.63/bin/startup.sh
+
+[Install]
+WantedBy = multi-user.target
