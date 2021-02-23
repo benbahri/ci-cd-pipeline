@@ -1,0 +1,35 @@
+---
+- name: install node-exporter on servers
+  hosts:
+  become: true
+  tasks:
+  - name: create user for node_ exporter
+    user:
+      name: node_exporter
+      create_home: no
+      shell: /bin/false
+  - name: download and uncompress node_exporter
+    unarchive:
+      src: https://github.com/prometheus/node_exporter/releases/download/v1.1.1/node_exporter-1.1.1.linux-amd64.tar.gz
+      dest: /tmp/
+      remote_src: yes
+  - name: compy node_exporter binary into /usr
+    copy:
+      src: /tmp/node_exporter-1.1.1.linux-amd64/node_exporter
+      dest: /usr/local/bin/
+      remote_src: yes
+  - name: change node_exporter ownershop
+    file:
+      path: /usr/local/bin/node_exporter
+      owner: node_exporter
+      group: node_exporter
+      mode: 0755
+  - name: créer le service
+    template:
+      src: node_exporter.service.j2
+      dest: /etc/systemd/system/node_exporter.service
+  - name: lancer le service
+    service:
+      daemon_reload: yes
+      name: node_exporter
+      state: started
