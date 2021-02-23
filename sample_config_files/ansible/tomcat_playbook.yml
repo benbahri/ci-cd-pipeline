@@ -1,0 +1,53 @@
+---
+- name: Setup tomcat prod server
+  hosts: tomcat
+  become: true
+  tasks:
+  - name: install java 8
+    apt:
+      update_cache: yes
+      name: default-jre
+      state: present
+
+  - name: create user tomcat
+    user:
+      name: tomcat
+      shell: /bin/false
+
+  - name: download and uncompress tomcat archive
+    unarchive:
+      src: https://downloads.apache.org/tomcat/tomcat-8/v8.5.63/bin/apache-tomcat-8.5.63.tar.gz
+      dest: /opt/
+      remote_src: yes
+
+  - name: edit context files
+    template:
+      src: context.xml.j2
+      dest: "{{ item }}"
+    loop:
+    - /opt/apache-tomcat-8.5.63/webapps/manager/META-INF/context.xml
+    - /opt/apache-tomcat-8.5.63/webapps/host-manager/META-INF/context.xml
+
+  - name: edit tomcat-users file
+    template:
+      src: tomcat-users.xml.j2
+      dest: /opt/apache-tomcat-8.5.63/conf/tomcat-users.xml
+
+  - name: change ownership of the tomcat folder
+    file:
+      path: /opt/apache-tomcat-8.5.63
+      owner: tomcat
+      group: tomcat
+      recurse: yes
+      state: directory
+
+  - name: create tomcat service
+    template:
+      src: tomcat.service.j2
+      dest: /etc/systemd/system/tomcat.service
+
+  - name: restart tomcat service
+    service:
+      name: tomcat
+      state: restarted
+      daemon_reload: yes
